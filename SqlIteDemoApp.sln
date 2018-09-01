@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2016
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.Core", "Sqlite.Core\Sqlite.Core.csproj", "{E4468561-497B-46DA-B377-2C7CC785D8D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.Infrastructure", "Sqlite.Infrastructure\Sqlite.Infrastructure.csproj", "{E428AED7-D863-495A-A5B4-2EE69AA3FEAB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{845A4735-BF32-4B7A-AD99-744F9D972411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite.WebUi", "Sqlite.WebUi\Sqlite.WebUi.csproj", "{A46301F5-96F8-40C7-A3ED-9D3369699816}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E4468561-497B-46DA-B377-2C7CC785D8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4468561-497B-46DA-B377-2C7CC785D8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4468561-497B-46DA-B377-2C7CC785D8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4468561-497B-46DA-B377-2C7CC785D8D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E428AED7-D863-495A-A5B4-2EE69AA3FEAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E428AED7-D863-495A-A5B4-2EE69AA3FEAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E428AED7-D863-495A-A5B4-2EE69AA3FEAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E428AED7-D863-495A-A5B4-2EE69AA3FEAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A46301F5-96F8-40C7-A3ED-9D3369699816}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A46301F5-96F8-40C7-A3ED-9D3369699816}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A46301F5-96F8-40C7-A3ED-9D3369699816}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A46301F5-96F8-40C7-A3ED-9D3369699816}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E4468561-497B-46DA-B377-2C7CC785D8D5} = {845A4735-BF32-4B7A-AD99-744F9D972411}
+		{E428AED7-D863-495A-A5B4-2EE69AA3FEAB} = {845A4735-BF32-4B7A-AD99-744F9D972411}
+		{A46301F5-96F8-40C7-A3ED-9D3369699816} = {845A4735-BF32-4B7A-AD99-744F9D972411}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A0797E89-AD3E-4109-B1A7-BEC5241654FC}
+	EndGlobalSection
+EndGlobal
