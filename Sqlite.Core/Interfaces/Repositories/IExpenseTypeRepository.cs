@@ -14,7 +14,7 @@ namespace Sqlite.Core.Interfaces.Repositories
 
         IEnumerable<ExpenseType> GetAllExpenses();
 
-        ExpenseType GetExpenseTypeById(string expenseTypeName);
+        ExpenseType GetExpenseTypeByName(string expenseTypeName);
 
         void SaveChangesToDb();
     }

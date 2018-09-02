@@ -70,7 +70,7 @@ namespace Sqlite.Infrastructure.Data.Repositories
         /// </summary>
         /// <param name="expenseTypeName"></param>
         /// <returns></returns>
-        public ExpenseType GetExpenseTypeById(string expenseTypeName)
+        public ExpenseType GetExpenseTypeByName(string expenseTypeName)
         {
             return Context.ExpenseTypes.SingleOrDefault(e => e.Type == expenseTypeName);
         }

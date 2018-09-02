@@ -29,13 +29,13 @@ namespace Sqlite.WebUi.Controllers
             return Ok(expenseTypeList);
         }
 
-        // GET: api/expensetypes/GetExpenseTypeById/5
+        // GET: api/expensetypes/GetExpenseTypeByName/5
         [HttpGet("{expenseTypeName}")]
         [ProducesResponseType(200, Type = typeof(ExpenseType))]
         [ProducesResponseType(404)]
         public ActionResult<ExpenseType> GetExpenseTypeById(string expenseTypeName)
         {
-            var expenseType = _expenseTypeRepository.GetExpenseTypeById(expenseTypeName);
+            var expenseType = _expenseTypeRepository.GetExpenseTypeByName(expenseTypeName);
 
             if (expenseType == null)
             {
@@ -58,7 +58,7 @@ namespace Sqlite.WebUi.Controllers
                 AddedOn = DateTime.Now,
                 LastModifiedOn = DateTime.Now
             };
-            var expenseTypeAlreadyExists = _expenseTypeRepository.GetExpenseTypeById(expenseType.Type);
+            var expenseTypeAlreadyExists = _expenseTypeRepository.GetExpenseTypeByName(expenseType.Type);
             if (expenseTypeAlreadyExists != null)
             {
                 return BadRequest("Expense Type already exists");
@@ -75,7 +75,7 @@ namespace Sqlite.WebUi.Controllers
         [Route("deleteexpensetype/{expenseTypeName}")]
         public IActionResult Delete(string expenseTypeName)
         {
-            var expenseTypeInDb = _expenseTypeRepository.GetExpenseTypeById(expenseTypeName);
+            var expenseTypeInDb = _expenseTypeRepository.GetExpenseTypeByName(expenseTypeName);
 
             if (expenseTypeInDb == null)
             {
