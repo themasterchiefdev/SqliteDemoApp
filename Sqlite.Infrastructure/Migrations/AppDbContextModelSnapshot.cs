@@ -18,14 +18,17 @@ namespace Sqlite.Infrastructure.Migrations
 
             modelBuilder.Entity("Sqlite.Core.Entities.ExpenseType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("AddedOn");
+                    b.Property<DateTime?>("AddedOn")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("LastModifiedOn");
+                    b.Property<DateTime?>("LastModifiedOn")
+                        .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
