@@ -5,8 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180902085101_InitialMigration.cs" />
+    <Compile Remove="Migrations\20180902102638_AddedGUIDToKey.cs" />
+    <Compile Remove="Migrations\20180902103542_addeddbpassword.cs" />
+    <Compile Remove="Migrations\20180902194429_UpdatedExpensetypeDataModel.cs" />
+    <Compile Remove="Migrations\20180902194554_UpdatedExpensetypeDataModel.cs" />
+    <Compile Remove="Migrations\20180902194713_UpdatedExpensetypeDataModel.cs" />
+    <Compile Remove="Migrations\20180902195028_UpdatedExpensetypeDataModel.cs" />
+    <Compile Remove="Migrations\20180902195135_UpdatedExpensetypeDataModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sqlite.Core\Sqlite.Core.csproj" />
   </ItemGroup>
 
 </Project>
