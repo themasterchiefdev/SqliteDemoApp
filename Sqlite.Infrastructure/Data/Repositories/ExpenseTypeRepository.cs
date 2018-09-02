@@ -25,7 +25,8 @@ namespace Sqlite.Infrastructure.Data.Repositories
         public void AddExpenseType(ExpenseType expenseType)
         {
             Context.ExpenseTypes.Add(expenseType);
-            SaveChangesToDb();
+
+            //SaveChangesToDb();
         }
 
         /// <summary>
@@ -42,14 +43,24 @@ namespace Sqlite.Infrastructure.Data.Repositories
             }
 
             Context.Entry((expenseType)).State = EntityState.Modified;
-            SaveChangesToDb();
+
+            //SaveChangesToDb();
+        }
+
+        public void RemoveExpenseType(Guid id)
+        {
+            var expenseType = Context.ExpenseTypes.SingleOrDefault(e => e.Id == id);
+            if (expenseType != null)
+            {
+                Context.ExpenseTypes.Remove(expenseType);
+            }
         }
 
         /// <summary>
         /// Gets all the Expenses from the DB
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ExpenseType> GetAllExpense()
+        public IEnumerable<ExpenseType> GetAllExpenses()
         {
             return Context.ExpenseTypes.ToList();
         }
@@ -57,11 +68,11 @@ namespace Sqlite.Infrastructure.Data.Repositories
         /// <summary>
         /// Get ExpenseType By Id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="expenseTypeName"></param>
         /// <returns></returns>
-        public ExpenseType GetExpenseTypeById(Guid id)
+        public ExpenseType GetExpenseTypeById(string expenseTypeName)
         {
-            return Context.ExpenseTypes.SingleOrDefault(e => e.Id == id);
+            return Context.ExpenseTypes.SingleOrDefault(e => e.Type == expenseTypeName);
         }
 
         /// <summary>

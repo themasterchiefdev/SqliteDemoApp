@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sqlite.Core.Interfaces.Repositories;
 using Sqlite.Infrastructure.Data;
+using Sqlite.Infrastructure.Data.Repositories;
 
 namespace Sqlite.WebUi
 {
@@ -22,7 +24,11 @@ namespace Sqlite.WebUi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            // Set-up SQLite Database
             services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=expensetracking.db"));
+
+            // Inject the repositories
+            services.AddScoped<IExpenseTypeRepository, ExpenseTypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

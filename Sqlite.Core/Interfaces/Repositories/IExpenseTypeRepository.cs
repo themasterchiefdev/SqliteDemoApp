@@ -10,9 +10,11 @@ namespace Sqlite.Core.Interfaces.Repositories
 
         void EditExpenseType(ExpenseType expenseType);
 
-        IEnumerable<ExpenseType> GetAllExpense();
+        void RemoveExpenseType(Guid id);
 
-        ExpenseType GetExpenseTypeById(Guid id);
+        IEnumerable<ExpenseType> GetAllExpenses();
+
+        ExpenseType GetExpenseTypeById(string expenseTypeName);
 
         void SaveChangesToDb();
     }
