@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sqlite.Core.Interfaces.Repositories;
+using Sqlite.Core.Interfaces.Services;
 using Sqlite.Infrastructure.Data;
 using Sqlite.Infrastructure.Data.Repositories;
+using Sqlite.Infrastructure.Services.ExpenseTypeService;
 
 namespace Sqlite.WebUi
 {
@@ -29,6 +31,7 @@ namespace Sqlite.WebUi
 
             // Inject the repositories
             services.AddScoped<IExpenseTypeRepository, ExpenseTypeRepository>();
+            services.AddScoped<IExpenseTypeService, ExpenseTypeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
