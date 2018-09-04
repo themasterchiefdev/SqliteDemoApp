@@ -17,17 +17,50 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
         private IExpenseTypeRepository _mockExpenseTypeRepository;
 
         /*
-         * RajivY: I have setup the mock for the repository but it never hits its implementation class i.e. ExpenseTypeRepository
-         *         I assume that I have mocked the Interface but never initialized its implementation
+         * RajivY: https://docs.microsoft.com/en-us/ef/core/miscellaneous/testing/sqlite
          */
 
+        #region Dummy ExpensesList
+
+        private static List<ExpenseType> DummyExpenses()
+        {
+            return new List<ExpenseType>()
+            {
+                new ExpenseType()
+                {
+                    Id=Guid.NewGuid(),
+                    Type = "Groceries",
+                    AddedOn = DateTime.Now,
+                    LastModifiedOn = DateTime.Now
+                },new ExpenseType()
+                {
+                    Id=Guid.NewGuid(),
+                    Type = "Internet",
+                    AddedOn = DateTime.Now,
+                    LastModifiedOn = DateTime.Now
+                }
+            };
+        }
+
+        #endregion Dummy ExpensesList
+
+        #region GetAllExpensesTypes
+
         [Test]
-        public void GetExpenses_GetAllExpenses_ShouldReturnAllExpenses()
+        public void GetExpensesTypes_GetsAllTheExpenses_ShouldReturnAllExpenses()
         {
             // arrange
+            // Setup-list
+            var types = DummyExpenses();
+
             // Setup Repository
             var mockExpenseTypeRepo = new Mock<IExpenseTypeRepository>();
-            mockExpenseTypeRepo.Setup(e => e.GetAllExpenses()).Returns(DummyExpenses);
+
+            mockExpenseTypeRepo.Setup(e => e.AddExpenseType(It.IsAny<ExpenseType>()))
+                .Callback((ExpenseType expenseType) => types.Add(expenseType));
+
+            mockExpenseTypeRepo.Setup(e => e.GetAllExpenses()).Returns(types);
+
             _mockExpenseTypeRepository = mockExpenseTypeRepo.Object;
 
             // Setup DbContext to use inMemory SQLite database
@@ -41,16 +74,7 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
                 context.Database.EnsureCreated();
             }
 
-            // Act
-            // Insert seed data into the database using one instance of the context
-            using (var context = new AppDbContext(options))
-            {
-                context.ExpenseTypes.Add(new ExpenseType() { Type = "Groceries", });
-                context.ExpenseTypes.Add(new ExpenseType() { Type = "Internet", });
-                context.SaveChanges();
-            }
-
-            // Assert
+            // Act and Assert
             // Use a clean instance of the context to run the test
             using (new AppDbContext(options))
             {
@@ -60,8 +84,14 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
             }
         }
 
+        #endregion GetAllExpensesTypes
+
+        #region GetExpensesTypeByName
+
         [Test]
-        public void GetExpensesById_GetsExpensesBasedOnId_ShouldReturnExpenseById()
+        [TestCase("Internet", "Internet")]
+        [TestCase("Groceries", "Groceries")]
+        public void GetExpenseTypeById_GetsExpensesBasedOnType_ShouldReturnExpenseTypeByName(string expenseTypeName, string expectedTypeName)
         {
             // arrange
             // Setup Repository
@@ -99,13 +129,13 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
             using (new AppDbContext(options))
             {
                 var service = new ExpenseTypeService(_mockExpenseTypeRepository);
-                var result = service.GetExpenseTypeByName("Internet");
-                Assert.AreEqual("Internet", result.Type);
+                var result = service.GetExpenseTypeByName(expenseTypeName);
+                Assert.AreEqual(expectedTypeName, result.Type);
             }
         }
 
         [Test]
-        public void GetExpensesById_GetsExpensesBasedOnId_ShouldThrowAnError()
+        public void GetExpensesTypeByName_PassInvalidExpenseType_ShouldThrowAnInvalidOperationException()
         {
             // arrange
             // Setup Repository
@@ -147,24 +177,113 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
             }
         }
 
-        private static List<ExpenseType> DummyExpenses()
+        #endregion GetExpensesTypeByName
+
+        #region Create ExpenseType
+
+        [Test]
+        public void CreateExpenseType_AddANewExpenseType_ShouldAddAnExpense()
         {
-            return new List<ExpenseType>()
+            // arrange
+
+            // Setup-list
+            var types = DummyExpenses();
+
+            // Setup Repository
+            var mockExpenseTypeRepo = new Mock<IExpenseTypeRepository>();
+
+            mockExpenseTypeRepo.Setup(e => e.AddExpenseType(It.IsAny<ExpenseType>()))
+                .Callback((ExpenseType expenseType) => types.Add(expenseType));
+
+            mockExpenseTypeRepo.Setup(e => e.GetAllExpenses()).Returns(types);
+
+            _mockExpenseTypeRepository = mockExpenseTypeRepo.Object;
+
+            // Setup DbContext to use inMemory SQLite database
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite("DataSource=:memory:")
+                .Options;
+
+            // Create the schema in the database
+            using (var context = new AppDbContext(options))
             {
-                new ExpenseType()
+                //  context.Database.EnsureDeleted();
+
+                context.Database.EnsureCreated();
+            }
+
+            //// Assert
+            //// Use a clean instance of the context to run the test
+            using (var context = new AppDbContext(options))
+            {
+                var service = new ExpenseTypeService(_mockExpenseTypeRepository);
+                service.CreateExpenseType(new ExpenseType()
                 {
-                    Id=Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
+                    Type = "Rajivs",
+                    AddedOn = DateTime.Now,
+                    LastModifiedOn = DateTime.Now
+                });
+                context.SaveChanges();
+
+                var result = _mockExpenseTypeRepository.GetAllExpenses().Count();
+                var newRecord = types.Find(t => t.Type == "Rajivs");
+
+                // Assert
+                Assert.Multiple(() =>
+                {
+                    Assert.AreEqual(3, result);
+                    Assert.AreEqual("Rajivs", newRecord.Type);
+                });
+            }
+        }
+
+        [Test]
+        [Ignore("No working as expected")]
+        public void CreateExpenseType_AddAnExistingExpenseType_ShouldThrowException()
+        {
+            //Arrange
+            // Setup-list
+            var types = DummyExpenses();
+
+            // Setup Repository
+            var mockExpenseTypeRepo = new Mock<IExpenseTypeRepository>();
+
+            mockExpenseTypeRepo.Setup(e => e.AddExpenseType(It.IsAny<ExpenseType>()))
+                .Callback((ExpenseType expenseType) => types.Add(expenseType));
+
+            mockExpenseTypeRepo.Setup(e => e.GetAllExpenses()).Returns(types);
+
+            _mockExpenseTypeRepository = mockExpenseTypeRepo.Object;
+
+            // Setup DbContext to use inMemory SQLite database
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite("DataSource=:memory:")
+                .Options;
+
+            // Create the schema in the database
+            using (var context = new AppDbContext(options))
+            {
+                //context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+            }
+
+            //// Assert
+            //// Use a clean instance of the context to run the test
+            using (var context = new AppDbContext(options))
+            {
+                var service = new ExpenseTypeService(_mockExpenseTypeRepository);
+
+                Assert.Throws<Exception>(() => service.CreateExpenseType(new ExpenseType()
+                {
+                    Id = Guid.NewGuid(),
                     Type = "Groceries",
                     AddedOn = DateTime.Now,
                     LastModifiedOn = DateTime.Now
-                },new ExpenseType()
-                {
-                    Id=Guid.NewGuid(),
-                    Type = "Internet",
-                    AddedOn = DateTime.Now,
-                    LastModifiedOn = DateTime.Now
-                }
-            };
+                }));
+            }
         }
+
+        #endregion Create ExpenseType
     }
 }

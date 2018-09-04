@@ -26,7 +26,7 @@ namespace Sqlite.Infrastructure.Data.Repositories
         {
             Context.ExpenseTypes.Add(expenseType);
 
-            //SaveChangesToDb();
+            SaveChangesToDb();
         }
 
         /// <summary>

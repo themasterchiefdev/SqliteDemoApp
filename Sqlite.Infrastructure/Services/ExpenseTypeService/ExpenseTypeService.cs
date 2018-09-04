@@ -13,6 +13,7 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
     public class ExpenseTypeService : IExpenseTypeService
     {
         private readonly IExpenseTypeRepository _repository;
+        private bool _expenseTypeExists = false;
 
         public ExpenseTypeService(IExpenseTypeRepository repository)
         {
@@ -21,7 +22,14 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
 
         public void CreateExpenseType(ExpenseType expenseType)
         {
-            throw new NotImplementedException();
+            if (!ValidateExpenseType(expenseType))
+            {
+                _repository.AddExpenseType(expenseType);
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
 
         public void EditExpenseType(ExpenseType expenseType)
@@ -51,7 +59,25 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
 
         public bool ValidateExpenseType(ExpenseType expenseTypeToValidate)
         {
-            throw new NotImplementedException();
+            var isValidExpenseType = _repository.GetExpenseTypeByName(expenseTypeToValidate.Type);
+            if (isValidExpenseType != null)
+            {
+                return _expenseTypeExists = true;
+            }
+            else
+            {
+                return _expenseTypeExists = false;
+            }
+        }
+
+        //TODO:Remove this method
+        public bool DoesTheExpenseTypeExists(string expenseType)
+        {
+            var isValidExpenseType = _repository.GetExpenseTypeByName(expenseType);
+
+            _expenseTypeExists = isValidExpenseType != null;
+
+            return _expenseTypeExists;
         }
     }
 }

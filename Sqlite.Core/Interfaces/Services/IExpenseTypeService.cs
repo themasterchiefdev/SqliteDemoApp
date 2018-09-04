@@ -19,5 +19,7 @@ namespace Sqlite.Core.Interfaces.Services
         ExpenseType GetExpenseTypeByName(string expenseTypeName);
 
         bool ValidateExpenseType(ExpenseType expenseTypeToValidate);
+
+        bool DoesTheExpenseTypeExists(string expenseType);
     }
 }
