@@ -17,8 +17,7 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
         private IExpenseTypeRepository _mockExpenseTypeRepository;
 
         /*
-         * RajivY: I have setup the mock for the repository but it never hits its implementation class i.e. ExpenseTypeRepository
-         *         I assume that I have mocked the Interface but never initialized its implementation
+         * RajivY: https://docs.microsoft.com/en-us/ef/core/miscellaneous/testing/sqlite
          */
 
         [Test]
