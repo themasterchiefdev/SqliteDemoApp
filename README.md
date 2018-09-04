@@ -36,4 +36,4 @@ TODO:// Add this
 ### Continous Integration
 I have set-up the continous integration on `master` branch using Visual Studio Team Services. After each commit or pull request merge on the master the CI build would kick-off the build process.
 
-The build status badge shows the build output as shown here  [Build-Status](#Build-Status)
+The build status badge shows the build output as shown here at Build-Status
