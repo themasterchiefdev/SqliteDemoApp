@@ -20,6 +20,21 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
             _repository = repository;
         }
 
+        public IEnumerable<ExpenseType> GetAllExpenses()
+        {
+            return _repository.GetAllExpenses().ToList();
+        }
+
+        public ExpenseType GetExpenseTypeByName(string expenseTypeName)
+        {
+            var expenseType = _repository.GetExpenseTypeByName(expenseTypeName);
+            if (expenseType == null)
+            {
+                throw new InvalidOperationException();
+            }
+            return expenseType;
+        }
+
         public void CreateExpenseType(ExpenseType expenseType)
         {
             if (!ValidateExpenseType(expenseType))
@@ -34,27 +49,12 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
 
         public void EditExpenseType(ExpenseType expenseType)
         {
-            throw new NotImplementedException();
+            _repository.EditExpenseType(expenseType);
         }
 
         public void RemoveExpenseType(Guid id)
         {
             throw new NotImplementedException();
-        }
-
-        public IEnumerable<ExpenseType> GetAllExpenses()
-        {
-            return _repository.GetAllExpenses().ToList();
-        }
-
-        public ExpenseType GetExpenseTypeByName(string expenseTypeName)
-        {
-            var expenseType = _repository.GetExpenseTypeByName(expenseTypeName);
-            if (expenseType == null)
-            {
-                throw new InvalidOperationException();
-            }
-            return expenseType;
         }
 
         public bool ValidateExpenseType(ExpenseType expenseTypeToValidate)
