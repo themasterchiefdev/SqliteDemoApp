@@ -49,7 +49,11 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
 
         public void EditExpenseType(ExpenseType expenseType)
         {
-            _repository.EditExpenseType(expenseType);
+            if (ValidateExpenseType(expenseType))
+            {
+                _repository.EditExpenseType(expenseType);
+            }
+            else { throw new Exception(); }
         }
 
         public void RemoveExpenseType(Guid id)

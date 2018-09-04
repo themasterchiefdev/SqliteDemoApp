@@ -286,6 +286,8 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
 
         #endregion Create ExpenseType
 
+        #region Edit Expense Types
+
         [Test]
         public void EditExpenseType_EditAnExistingExpenseType_ShouldUpdateAnExistingExpenseType()
         {
@@ -297,7 +299,7 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
 
             // get expense type to update
             mockExpenseTypeRepo.Setup(e => e.GetExpenseTypeByName(It.IsAny<string>()))
-                               .Returns((string s) => types.Find(x => x.Type == s));
+                .Returns((string s) => types.Find(x => x.Type == s));
 
             _mockExpenseTypeRepository = mockExpenseTypeRepo.Object;
 
@@ -322,5 +324,46 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
                 Assert.AreEqual("Power", service.GetExpenseTypeByName("Power").Type);
             }
         }
+
+        [Test]
+        public void EditExpenseType_EditATypeWhichDoesntExist_ShouldReturnAnException()
+        {
+            // Arrange
+            var types = DummyExpenses();
+
+            // set-up Repository
+            var mockExpenseTypeRepo = new Mock<IExpenseTypeRepository>();
+
+            // get expense type to update
+            mockExpenseTypeRepo.Setup(e => e.GetExpenseTypeByName(It.IsAny<string>()))
+                .Returns((string s) => types.Find(x => x.Type == s));
+
+            _mockExpenseTypeRepository = mockExpenseTypeRepo.Object;
+
+            // Setup DbContext to use inMemory SQLite database
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite("DataSource=:memory:")
+                .Options;
+
+            // Create the schema in the database
+            using (var context = new AppDbContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
+
+            // Act
+            using (var context = new AppDbContext(options))
+            {
+                var service = new ExpenseTypeService(_mockExpenseTypeRepository);
+                var et = new ExpenseType()
+                {
+                    Type = "Power"
+                };
+
+                Assert.Throws<Exception>(() => service.EditExpenseType(et));
+            }
+        }
+
+        #endregion Edit Expense Types
     }
 }
