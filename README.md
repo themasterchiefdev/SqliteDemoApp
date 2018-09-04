@@ -1,7 +1,7 @@
 ## Sqlite Demo App
 A demo app for building ASP.Net core WebApi apps using entity framework core 2.1 with SQLite database
 
-###Build-Status
+### Build-Status
 
 | Branch        | Build Status | 
 | ------------- |:-------------:|
