@@ -13,6 +13,10 @@ namespace Sqlite.Infrastructure.Data
     {
         public DbSet<ExpenseType> ExpenseTypes { get; set; }
 
+        public AppDbContext()
+        {
+        }
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }
 

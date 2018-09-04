@@ -41,7 +41,12 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
 
         public ExpenseType GetExpenseTypeByName(string expenseTypeName)
         {
-            throw new NotImplementedException();
+            var expenseType = _repository.GetExpenseTypeByName(expenseTypeName);
+            if (expenseType == null)
+            {
+                throw new InvalidOperationException();
+            }
+            return expenseType;
         }
 
         public bool ValidateExpenseType(ExpenseType expenseTypeToValidate)
