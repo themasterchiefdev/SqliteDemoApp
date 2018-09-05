@@ -58,7 +58,16 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
 
         public void RemoveExpenseType(Guid id)
         {
-            throw new NotImplementedException();
+            var item = Find(id);
+
+            if (!item)
+            {
+                _repository.RemoveExpenseType(id);
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         public bool ValidateExpenseType(ExpenseType expenseTypeToValidate)
@@ -79,9 +88,30 @@ namespace Sqlite.Infrastructure.Services.ExpenseTypeService
         {
             var isValidExpenseType = _repository.GetExpenseTypeByName(expenseType);
 
-            _expenseTypeExists = isValidExpenseType != null;
+            if (isValidExpenseType != null)
+            {
+                return _expenseTypeExists = true;
+            }
 
             return _expenseTypeExists;
+        }
+
+        public bool Find(Guid id)
+        {
+            try
+            {
+                var item = _repository.Find(id);
+                if (item == null)
+                {
+                    return _expenseTypeExists = false;
+                }
+
+                return _expenseTypeExists = true;
+            }
+            catch (Exception)
+            {
+                return _expenseTypeExists = false;
+            }
         }
     }
 }

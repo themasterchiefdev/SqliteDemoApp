@@ -21,5 +21,7 @@ namespace Sqlite.Core.Interfaces.Services
         bool ValidateExpenseType(ExpenseType expenseTypeToValidate);
 
         bool DoesTheExpenseTypeExists(string expenseType);
+
+        bool Find(Guid id);
     }
 }
