@@ -16,6 +16,8 @@ namespace Sqlite.Core.Interfaces.Repositories
 
         ExpenseType GetExpenseTypeByName(string expenseTypeName);
 
+        ExpenseType Find(Guid id);
+
         void SaveChangesToDb();
     }
 }

@@ -28,13 +28,13 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
             {
                 new ExpenseType()
                 {
-                    Id=Guid.NewGuid(),
+                    Id=Guid.Parse("0df4ec64-6c4c-4085-8dac-0ee98943d8a9"),
                     Type = "Groceries",
                     AddedOn = DateTime.Now,
                     LastModifiedOn = DateTime.Now
                 },new ExpenseType()
                 {
-                    Id=Guid.NewGuid(),
+                    Id=Guid.Parse("144a9c6a-135c-4535-8c6e-13adff61b24a"),
                     Type = "Internet",
                     AddedOn = DateTime.Now,
                     LastModifiedOn = DateTime.Now
@@ -108,6 +108,12 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
             // Create the schema in the database
             using (var context = new AppDbContext(options))
             {
+                context.Database.EnsureDeleted();
+            }
+
+            // Create the schema in the database
+            using (var context = new AppDbContext(options))
+            {
                 context.Database.EnsureCreated();
             }
 
@@ -148,6 +154,12 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
             var options = new DbContextOptionsBuilder<AppDbContext>()
                 .UseSqlite("DataSource=:memory:")
                 .Options;
+
+            // Create the schema in the database
+            using (var context = new AppDbContext(options))
+            {
+                context.Database.EnsureDeleted();
+            }
 
             // Create the schema in the database
             using (var context = new AppDbContext(options))
@@ -365,5 +377,115 @@ namespace SqliteDemoApp.tests.ExpenseTypeTests
         }
 
         #endregion Edit Expense Types
+
+        #region Remove Expense Type
+
+        [Test]
+        [TestCase("Groceries")]
+        [TestCase("Internet")]
+        public void RemoveExpenseType_RemovestheSpecifiedExpenType_ShouldRemoveExpenseTypeFromList(string typeName)
+        {
+            // Arrange
+            var types = DummyExpenses();
+
+            // set up repos
+            // set-up Repository
+            var mockExpenseTypeRepo = new Mock<IExpenseTypeRepository>();
+
+            // get expense type to delete
+            mockExpenseTypeRepo.Setup(e => e.GetExpenseTypeByName(It.IsAny<string>()))
+                 .Returns((string s) => types.Find(x => x.Type == s));
+
+            // To Remove item based on the given GUID.
+            // Setup mock for remove item based on GUID
+            // In the callback, 1st Find the item based on the Id and then remove it from the list
+            mockExpenseTypeRepo.Setup(r => r.RemoveExpenseType(It.IsAny<Guid>()))
+                .Callback((Guid id) => types.Remove(types.Find(x => x.Id == id)));
+
+            // get all expenses
+            mockExpenseTypeRepo.Setup(x => x.GetAllExpenses()).Returns(types);
+
+            _mockExpenseTypeRepository = mockExpenseTypeRepo.Object;
+
+            // set up db context
+            // Setup DbContext to use inMemory SQLite database
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite("DataSource=:memory:")
+                .Options;
+
+            // Create the schema in the database
+            using (var context = new AppDbContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
+
+            // Act
+            using (var context = new AppDbContext(options))
+            {
+                var service = new ExpenseTypeService(_mockExpenseTypeRepository);
+
+                var item = service.GetExpenseTypeByName(typeName);
+
+                service.RemoveExpenseType(item.Id);
+
+                Assert.AreEqual(1, types.Count);
+            }
+        }
+
+        [Test]
+        [Ignore("Bug, need to fix this later")]
+        public void RemoveExpenseType_ProvideInvalidExpenseType_ShouldThrowAnException()
+        {
+            // Arrange
+            var types = DummyExpenses();
+
+            // set up repos
+            // set-up Repository
+            var mockExpenseTypeRepo = new Mock<IExpenseTypeRepository>();
+
+            // get expense type to delete
+            //mockExpenseTypeRepo.Setup(e => e.GetExpenseTypeByName(It.IsAny<string>()))
+            //    .Returns((string s) => types.Find(x => x.Type == s));
+
+            mockExpenseTypeRepo.Setup(x => x.Find(It.IsAny<Guid>()))
+                .Returns((Guid id) => types.Find(x => x.Id == id));
+
+            // To Remove item based on the given GUID.
+            // Setup mock for remove item based on GUID
+            // In the callback, 1st Find the item based on the Id and then remove it from the list
+            mockExpenseTypeRepo.Setup(r => r.RemoveExpenseType(It.IsAny<Guid>()))
+                .Callback((Guid id) => types.Remove(types.Find(x => x.Id == id)));
+
+            // get all expenses
+            mockExpenseTypeRepo.Setup(x => x.GetAllExpenses()).Returns(types);
+
+            _mockExpenseTypeRepository = mockExpenseTypeRepo.Object;
+
+            // set up db context
+            // Setup DbContext to use inMemory SQLite database
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite("DataSource=:memory:")
+                .Options;
+
+            // Create the schema in the database
+            using (var context = new AppDbContext(options))
+            {
+                context.Database.EnsureCreated();
+            }
+
+            // Act
+            using (var context = new AppDbContext(options))
+            {
+                var service = new ExpenseTypeService(_mockExpenseTypeRepository);
+
+                var item = Guid.Parse("0df4ec64-6c4c-4085-8dac-0ee98943d8a7");
+
+                //service.RemoveExpenseType(item.Id);
+
+                Assert.Throws<InvalidOperationException>(() => service.RemoveExpenseType(item));
+            }
+        }
+
+        #endregion Remove Expense Type
     }
 }

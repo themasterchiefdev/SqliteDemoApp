@@ -75,6 +75,11 @@ namespace Sqlite.Infrastructure.Data.Repositories
             return Context.ExpenseTypes.SingleOrDefault(e => e.Type == expenseTypeName);
         }
 
+        public ExpenseType Find(Guid id)
+        {
+            return Context.ExpenseTypes.Single(x => x.Id == id);
+        }
+
         /// <summary>
         /// Commits all the transactions to the database
         /// </summary>
